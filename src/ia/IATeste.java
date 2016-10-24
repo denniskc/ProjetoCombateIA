@@ -47,7 +47,7 @@ public class IATeste implements InterfaceIA {
 		if(aUnidade.estado ==0 || aUnidade.caminho == null){
 			Unidade ui = unidadeMaisProxima(aUnidade,listadeAgentes);
 			if(ui!=null){
-				System.out.println("MeuTime "+aUnidade.getTime()+" objetivo "+ui.getTime());
+				//System.out.println("MeuTime "+aUnidade.getTime()+" objetivo "+ui.getTime());
 				aUnidade.objetivox = (int)ui.getX()/16;
 				aUnidade.objetivoy = (int)ui.getY()/16;
 				aUnidade.setaObjetivo(aUnidade.objetivox,aUnidade.objetivoy);

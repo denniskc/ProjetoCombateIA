@@ -187,7 +187,7 @@ public class Unidade extends Agente {
 		
 		if(timeranim<100){
 			dbg.setColor(Color.MAGENTA);
-			dbg.drawLine((int)X, (int)Y, (int)xalvoanim, (int)yalvoanim);
+			dbg.drawLine((int)X- XMundo, (int)Y- YMundo, (int)xalvoanim- XMundo, (int)yalvoanim- YMundo);
 		}
 
 	}
