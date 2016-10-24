@@ -28,6 +28,7 @@ public class Unidade extends Agente {
 	protected float vel = 40;
 	protected float raioAtaque = 0;
 
+	protected int timerAtaque = 0;
 
 	public AEstrela aestrela;
 	public double ang = 0;
@@ -37,6 +38,11 @@ public class Unidade extends Agente {
 	public int objetivox = 0;
 	public int objetivoy = 0;
 	public boolean anda = true;
+	public Unidade inimigoAlvo = null; 
+	
+	private double xalvoanim = 0;
+	private double yalvoanim = 0;
+	private int timeranim = 1000;
 
 	public Unidade(int x, int y, int oTime,Color color, InterfaceIA ia) {
 		// TODO Auto-generated constructor stub
@@ -55,6 +61,8 @@ public class Unidade extends Agente {
 	public void SimulaSe(int DiffTime) {
 		// TODO Auto-generated method stub
 		timeria += DiffTime;
+		timerAtaque += DiffTime;
+		timeranim += DiffTime;
 
 		if (setouobjetivo == true) {
 			setaObjetivo(objetivox, objetivoy);
@@ -176,6 +184,11 @@ public class Unidade extends Agente {
 		double linefy = Y + 5 * Math.sin(ang);
 		dbg.drawLine((int) X - XMundo, (int) Y - YMundo, (int) linefx - XMundo,
 				(int) linefy - YMundo);
+		
+		if(timeranim<100){
+			dbg.setColor(Color.MAGENTA);
+			dbg.drawLine((int)X, (int)Y, (int)xalvoanim, (int)yalvoanim);
+		}
 
 	}
 
@@ -209,6 +222,32 @@ public class Unidade extends Agente {
 		double dx = un.X-X;
 		double dy = un.Y-Y;
 		return Math.atan2(dx, dy);
-	}	
+	}
 	
+	protected void levaDano(float dano){
+		life-=dano;
+		if(life<=0){
+			vivo = false;
+		}
+	}
+	
+	public void ataca(Unidade un){
+		if(timerAtaque>250){
+			float dist = getDist2(un);
+			if(dist < raioAtaque*raioAtaque){
+				timerAtaque = 0;
+				if(Constantes.rnd.nextInt(10)>2){
+					float dano2 = dano/2+(Constantes.rnd.nextFloat()*(dano));
+					un.levaDano(dano);
+					xalvoanim = un.getX();
+					yalvoanim = un.getY();
+					timeranim = 0;
+				}
+			}
+		}
+	}
+	
+	public boolean getVivo(){
+		return vivo;
+	}
 }

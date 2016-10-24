@@ -207,28 +207,28 @@ public GamePanel()
 	mapa.loadmapfromimage("/200x200.png");
 	
 	//time 1
-	for(int i = 0; i < 10; i++){
+	for(int i = 0; i < 30; i++){
 		Color cor = new Color(255,0,0);
 		int bx = 20;
 		int by = 20+i; 
 		Unidade agentetest = new UnidadeSoldado(bx*16,by*16,1, cor,ia1);
 		listadeagentes.add(agentetest);
 	}
-	for(int i = 0; i < 10; i++){
+	for(int i = 0; i < 30; i++){
 		Color cor = new Color(128,0,0);
 		int bx = 18;
 		int by = 20+i; 
 		Unidade agentetest = new UnidadeLanceiro(bx*16,by*16,1, cor,ia1);
 		listadeagentes.add(agentetest);
 	}
-	for(int i = 0; i < 10; i++){
+	for(int i = 0; i < 30; i++){
 		Color cor = new Color(80,0,0);
 		int bx = 16;
 		int by = 20+i; 
 		Unidade agentetest = new UnidadeArqueiro(bx*16,by*16,1, cor,ia1);
 		listadeagentes.add(agentetest);
 	}
-	for(int i = 0; i < 10; i++){
+	for(int i = 0; i < 30; i++){
 		Color cor = new Color(128,60,0);
 		int bx = 14;
 		int by = 20+i; 
@@ -237,28 +237,28 @@ public GamePanel()
 	}
 	
 	//time 2
-	for(int i = 0; i < 10; i++){
+	for(int i = 0; i < 30; i++){
 		Color cor = new Color(0,0,255);
 		int bx = 40;
 		int by = 20+i; 
 		Unidade agentetest = new UnidadeSoldado(bx*16,by*16,2, cor,ia2);
 		listadeagentes.add(agentetest);
 	}
-	for(int i = 0; i < 10; i++){
+	for(int i = 0; i < 30; i++){
 		Color cor = new Color(0,0,128);
 		int bx = 42;
 		int by = 20+i; 
 		Unidade agentetest = new UnidadeLanceiro(bx*16,by*16,2, cor,ia2);
 		listadeagentes.add(agentetest);
 	}
-	for(int i = 0; i < 10; i++){
+	for(int i = 0; i < 30; i++){
 		Color cor = new Color(0,0,80);
 		int bx = 44;
 		int by = 20+i; 
 		Unidade agentetest = new UnidadeArqueiro(bx*16,by*16,2, cor,ia2);
 		listadeagentes.add(agentetest);
 	}
-	for(int i = 0; i < 10; i++){
+	for(int i = 0; i < 30; i++){
 		Color cor = new Color(0,60,128);
 		int bx = 46;
 		int by = 20+i; 
@@ -371,7 +371,13 @@ private void gameUpdate(long DiffTime)
 	
 	
 	for(int i = 0;i < listadeagentes.size();i++){
-		  listadeagentes.get(i).SimulaSe((int)DiffTime);
+		Agente agg = listadeagentes.get(i);
+		if(agg.vivo==false){
+			  listadeagentes.remove(i);
+			  i--;
+		}else{
+			agg.SimulaSe((int)DiffTime);
+		}
 	}
 }
 
