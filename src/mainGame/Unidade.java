@@ -1,11 +1,12 @@
 package mainGame;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 
 import aestrela.AEstrela;
 import ia.InterfaceIA;
 
-public class Unidade extends Agente {
+public class Unidade extends Agente implements UnidadeBloqueada{
 	
 	public int TIPO_SOLDADO = 1;
 	public int TIPO_LANCEIRO = 2;
@@ -17,6 +18,7 @@ public class Unidade extends Agente {
 	protected double oldy = 0;
 	protected int timeria = 0;
 	protected boolean colidiu = false;
+	protected int codigoUnico = -1;
 	
 	protected InterfaceIA ia = null;
 	
@@ -38,11 +40,13 @@ public class Unidade extends Agente {
 	public int objetivox = 0;
 	public int objetivoy = 0;
 	public boolean anda = true;
-	public Unidade inimigoAlvo = null; 
+	public UnidadeBloqueada inimigoAlvo = null; 
 	
 	private double xalvoanim = 0;
 	private double yalvoanim = 0;
 	private int timeranim = 1000;
+	
+	public ArrayList<Object> listaDeOrdens = new ArrayList<>();
 
 	public Unidade(int x, int y, int oTime,Color color, InterfaceIA ia) {
 		// TODO Auto-generated constructor stub
@@ -55,6 +59,8 @@ public class Unidade extends Agente {
 		this.oTime = oTime;
 		
 		this.ia = ia;
+		
+		codigoUnico = Constantes.rnd.nextInt();
 	}
 
 	@Override
@@ -71,7 +77,7 @@ public class Unidade extends Agente {
 
 		if (aestrela.iniciouAestrela) {
 			if (aestrela.achoufinal == false) {
-				int[] retorno = aestrela.continuapath(20);
+				int[] retorno = aestrela.continuapath(5);
 				if (retorno != null) {
 					AEstrela atmp = new AEstrela(GamePanel.mapa);
 					int[] caminho2 = atmp.StartAestrela((int) (X / 16),
@@ -194,16 +200,17 @@ public class Unidade extends Agente {
 
 	public void setaObjetivo(int objetivox, int objetivoy) {
 		long tempoinicio = System.currentTimeMillis();
-		caminho = aestrela.StartAestrela((int) (X / 16), (int) (Y / 16),objetivox, objetivoy, 100);
+		caminho = aestrela.StartAestrela((int) (X / 16), (int) (Y / 16),objetivox, objetivoy, 30);
 		GamePanel.tempo = (int) (System.currentTimeMillis() - tempoinicio);
 		GamePanel.nodosabertos = aestrela.nodosAbertos.size()+ aestrela.nodosFechados.size();
 		estado = 0;
 	}
 
 	public void calculaIA(int DiffTime) {
-		ia.rodaIaUnidade(this,GamePanel.listadeagentes, GamePanel.mapa);
+		ia.rodaIaUnidade(this,GamePanel.listadeagentesbloqueados, GamePanel.mapa);
 	}
 	
+	public int getCodigoUnico(){return codigoUnico;}
 	public int getTime(){return oTime;}
 	public int getTipo(){return tipo;}
 	public float getLife(){return life;}
@@ -213,15 +220,19 @@ public class Unidade extends Agente {
 	public double getX(){return X;}
 	public double getY(){return Y;}
 	
-	public float getDist2(Unidade un){
-		double dx = X-un.X;
-		double dy = Y-un.Y;
+	public float getDist2(UnidadeBloqueada un){
+		double dx = X-un.getX();
+		double dy = Y-un.getY();
 		return (float)(dx*dx+dy*dy);
 	}
-	public double getAng(Unidade un){
-		double dx = un.X-X;
-		double dy = un.Y-Y;
+	public double getAng(UnidadeBloqueada un){
+		double dx = un.getX()-X;
+		double dy = un.getY()-Y;
 		return Math.atan2(dx, dy);
+	}
+	
+	public boolean getVivo(){
+		return vivo;
 	}
 	
 	protected void levaDano(float dano){
@@ -231,14 +242,18 @@ public class Unidade extends Agente {
 		}
 	}
 	
-	public void ataca(Unidade un){
+	public void ataca(UnidadeBloqueada un){
 		if(timerAtaque>250){
 			float dist = getDist2(un);
 			if(dist < raioAtaque*raioAtaque){
 				timerAtaque = 0;
 				if(Constantes.rnd.nextInt(10)>2){
 					float dano2 = dano/2+(Constantes.rnd.nextFloat()*(dano));
-					un.levaDano(dano);
+					Unidade unidade = pegaUnidade(un);
+					if(unidade!=null){
+						unidade.levaDano(dano);
+					}
+					
 					xalvoanim = un.getX();
 					yalvoanim = un.getY();
 					timeranim = 0;
@@ -247,7 +262,14 @@ public class Unidade extends Agente {
 		}
 	}
 	
-	public boolean getVivo(){
-		return vivo;
+	private Unidade pegaUnidade(UnidadeBloqueada un){
+		for (int i = 0; i < GamePanel.listadeagentes.size(); i++) {
+			Unidade unidade = GamePanel.listadeagentes.get(i);
+			if(unidade.codigoUnico==un.getCodigoUnico()){
+				return unidade;
+			}
+		}
+		return null;
 	}
+
 }

@@ -35,6 +35,7 @@ protected boolean LEFT, RIGHT,UP,DOWN;
 protected static int mousex,mousey; 
 
 protected static ArrayList<Unidade> listadeagentes = new ArrayList<Unidade>();
+protected static ArrayList<UnidadeBloqueada> listadeagentesbloqueados = new ArrayList<UnidadeBloqueada>();
 
 protected static Mapa_Grid mapa;
 
@@ -46,9 +47,86 @@ protected static int nodosabertos = 0;
 protected InterfaceIA ia1;
 protected InterfaceIA ia2;
 
+ArrayList<Unidade> listaUnidadesTemp = new ArrayList<>(1000);
+
 public GamePanel()
 {
 
+	initListners();	
+	
+	ia1 = new IATeste();
+	ia2 = new IATeste();
+	
+	mousex = mousey = 0;
+	
+	mapa = new Mapa_Grid(200,200,125, 80);
+	mapa.loadmapfromimage("/200x200.png");
+	
+	//time 1
+	for(int i = 0; i < 80; i++){
+		Color cor = new Color(255,0,0);
+		int bx = 20;
+		int by = 20+i; 
+		Unidade agentetest = new UnidadeSoldado(bx*16,by*16,1, cor,ia1);
+		listadeagentes.add(agentetest);
+	}
+	for(int i = 0; i < 80; i++){
+		Color cor = new Color(128,0,0);
+		int bx = 18;
+		int by = 20+i; 
+		Unidade agentetest = new UnidadeLanceiro(bx*16,by*16,1, cor,ia1);
+		listadeagentes.add(agentetest);
+	}
+	for(int i = 0; i < 80; i++){
+		Color cor = new Color(80,0,0);
+		int bx = 16;
+		int by = 20+i; 
+		Unidade agentetest = new UnidadeArqueiro(bx*16,by*16,1, cor,ia1);
+		listadeagentes.add(agentetest);
+	}
+	for(int i = 0; i < 80; i++){
+		Color cor = new Color(128,60,0);
+		int bx = 14;
+		int by = 20+i; 
+		Unidade agentetest = new UnidadeCavaleiro(bx*16,by*16,1, cor,ia1);
+		listadeagentes.add(agentetest);
+	}
+	
+	int baseBloc = 120;
+	//time 2
+	for(int i = 0; i < 80; i++){
+		Color cor = new Color(0,0,255);
+		int bx = baseBloc;
+		int by = 20+i; 
+		Unidade agentetest = new UnidadeSoldado(bx*16,by*16,2, cor,ia2);
+		listadeagentes.add(agentetest);
+	}
+	for(int i = 0; i < 80; i++){
+		Color cor = new Color(0,0,128);
+		int bx = baseBloc+2;
+		int by = 20+i; 
+		Unidade agentetest = new UnidadeLanceiro(bx*16,by*16,2, cor,ia2);
+		listadeagentes.add(agentetest);
+	}
+	for(int i = 0; i < 80; i++){
+		Color cor = new Color(0,0,80);
+		int bx = baseBloc+4;
+		int by = 20+i; 
+		Unidade agentetest = new UnidadeArqueiro(bx*16,by*16,2, cor,ia2);
+		listadeagentes.add(agentetest);
+	}
+	for(int i = 0; i < 80; i++){
+		Color cor = new Color(0,60,128);
+		int bx = baseBloc+6;
+		int by = 20+i; 
+		Unidade agentetest = new UnidadeCavaleiro(bx*16,by*16,2, cor,ia2);
+		listadeagentes.add(agentetest);
+	}	
+	
+	listadeagentesbloqueados.addAll(listadeagentes);
+} // end of GamePanel()
+
+private void initListners() {
 	setBackground(Color.white);
 	setPreferredSize( new Dimension(PWIDTH, PHEIGHT));
 
@@ -103,8 +181,6 @@ public GamePanel()
 			// TODO Auto-generated method stub
 			mousex = e.getX(); 
 			mousey = e.getY();
-			
-
 		}
 		
 		@Override
@@ -173,125 +249,8 @@ public GamePanel()
 			// TODO Auto-generated method stub
 			
 		}
-	});	
-	
-//	for(int i = 0; i < 20; i++){
-//		Color cor = Color.black;
-//		
-//		switch (rnd.nextInt(4)) {
-//		case 0:
-//			cor = Color.red;
-//			break;
-//		case 1:
-//			cor = Color.BLUE;
-//			break;
-//		case 2:
-//			cor = Color.green;
-//			break;
-//
-//			
-//		default:
-//			break;
-//		}
-//		
-//		
-//		listadeagentes.add(new MeuAgente(10+rnd.nextInt(780), 10+rnd.nextInt(480), cor));		
-//	}
-	
-	ia1 = new IATeste();
-	ia2 = new IATeste();
-	
-	mousex = mousey = 0;
-	
-	mapa = new Mapa_Grid(200,200,125, 80);
-	mapa.loadmapfromimage("/200x200.png");
-	
-	//time 1
-	for(int i = 0; i < 100; i++){
-		Color cor = new Color(255,0,0);
-		int bx = 20;
-		int by = 20+i; 
-		Unidade agentetest = new UnidadeSoldado(bx*16,by*16,1, cor,ia1);
-		listadeagentes.add(agentetest);
-	}
-	for(int i = 0; i < 100; i++){
-		Color cor = new Color(128,0,0);
-		int bx = 18;
-		int by = 20+i; 
-		Unidade agentetest = new UnidadeLanceiro(bx*16,by*16,1, cor,ia1);
-		listadeagentes.add(agentetest);
-	}
-	for(int i = 0; i < 100; i++){
-		Color cor = new Color(80,0,0);
-		int bx = 16;
-		int by = 20+i; 
-		Unidade agentetest = new UnidadeArqueiro(bx*16,by*16,1, cor,ia1);
-		listadeagentes.add(agentetest);
-	}
-	for(int i = 0; i < 100; i++){
-		Color cor = new Color(128,60,0);
-		int bx = 14;
-		int by = 20+i; 
-		Unidade agentetest = new UnidadeCavaleiro(bx*16,by*16,1, cor,ia1);
-		listadeagentes.add(agentetest);
-	}
-	
-	//time 2
-	for(int i = 0; i < 100; i++){
-		Color cor = new Color(0,0,255);
-		int bx = 80;
-		int by = 20+i; 
-		Unidade agentetest = new UnidadeSoldado(bx*16,by*16,2, cor,ia2);
-		listadeagentes.add(agentetest);
-	}
-	for(int i = 0; i < 100; i++){
-		Color cor = new Color(0,0,128);
-		int bx = 82;
-		int by = 20+i; 
-		Unidade agentetest = new UnidadeLanceiro(bx*16,by*16,2, cor,ia2);
-		listadeagentes.add(agentetest);
-	}
-	for(int i = 0; i < 100; i++){
-		Color cor = new Color(0,0,80);
-		int bx = 84;
-		int by = 20+i; 
-		Unidade agentetest = new UnidadeArqueiro(bx*16,by*16,2, cor,ia2);
-		listadeagentes.add(agentetest);
-	}
-	for(int i = 0; i < 100; i++){
-		Color cor = new Color(0,60,128);
-		int bx = 86;
-		int by = 20+i; 
-		Unidade agentetest = new UnidadeCavaleiro(bx*16,by*16,2, cor,ia2);
-		listadeagentes.add(agentetest);
-	}	
-	
-//	for(int i = 0; i < 10; i++){
-//		Color cor = Color.black;
-//		cor = Color.red;	
-//	
-//		Unidade agentetest = new Unidade(10+rnd.nextInt(1000), 10+rnd.nextInt(1000),1, cor);	
-//		while(mapa.mapa[(int)(agentetest.Y/16)][(int)(agentetest.X/16)]==1){
-//			agentetest.X = 10+rnd.nextInt(1000);
-//			agentetest.Y = 10+rnd.nextInt(1000);
-//		}
-//			
-//		listadeagentes.add(agentetest);
-//	}
-//	
-//	for(int i = 0; i < 10; i++){
-//		Color cor = Color.black;
-//		cor = Color.BLUE;
-//
-//		Unidade agentetest = new Unidade(10+rnd.nextInt(1000), 10+rnd.nextInt(1000),2, cor);	
-//		while(mapa.mapa[(int)(agentetest.Y/16)][(int)(agentetest.X/16)]==1){
-//			agentetest.X = 10+rnd.nextInt(1000);
-//			agentetest.Y = 10+rnd.nextInt(1000);
-//		}
-//			
-//		listadeagentes.add(agentetest);
-//	}
-} // end of GamePanel()
+	});
+}
 
 public void startGame()
 // initialise and start the thread
@@ -351,6 +310,29 @@ System.exit(0); // so enclosing JFrame/JApplet exits
 int timerfps = 0;
 private void gameUpdate(long DiffTime)
 { 
+	//Roda IA General
+	
+	listaUnidadesTemp.clear();
+	
+	for(int i = 0; i < listadeagentes.size();i++){
+		Unidade un = listadeagentes.get(i);
+		if(un.getTime()==1){
+			listaUnidadesTemp.add(un);
+		}
+	}
+	
+	ia1.rodaIaGeneral(listaUnidadesTemp,listadeagentesbloqueados, mapa, 1);
+	
+	listaUnidadesTemp.clear();
+	
+	for(int i = 0; i < listadeagentes.size();i++){
+		Unidade un = listadeagentes.get(i);
+		if(un.getTime()==1){
+			listaUnidadesTemp.add(un);
+		}
+	}
+	
+	ia2.rodaIaGeneral(listaUnidadesTemp,listadeagentesbloqueados, mapa, 2);
 	
 	if(LEFT){
 		posx-=200*DiffTime/1000.0;
@@ -374,6 +356,7 @@ private void gameUpdate(long DiffTime)
 		Agente agg = listadeagentes.get(i);
 		if(agg.vivo==false){
 			  listadeagentes.remove(i);
+			  listadeagentesbloqueados.remove(i);
 			  i--;
 		}else{
 			agg.SimulaSe((int)DiffTime);

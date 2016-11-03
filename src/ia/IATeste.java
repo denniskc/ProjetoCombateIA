@@ -7,17 +7,18 @@ import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 import mainGame.Constantes;
 import mainGame.Mapa;
 import mainGame.Unidade;
+import mainGame.UnidadeBloqueada;
 
 public class IATeste implements InterfaceIA {
 
 	@Override
-	public void rodaIaGeneral(ArrayList<Unidade> listadeUnidades, Mapa mapa, int codExercito) {
+	public void rodaIaGeneral(ArrayList<Unidade> minhasUnidades,ArrayList<UnidadeBloqueada> listadeUnidades, Mapa mapa, int codExercito) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void rodaIaUnidade(Unidade aUnidade, ArrayList<Unidade> listadeAgentes, Mapa mapa) {
+	public void rodaIaUnidade(Unidade aUnidade, ArrayList<UnidadeBloqueada> listadeAgentes, Mapa mapa) {
 		
 		if(aUnidade.inimigoAlvo!=null){
 			float dist = aUnidade.getDist2(aUnidade.inimigoAlvo);
@@ -27,7 +28,7 @@ public class IATeste implements InterfaceIA {
 		}
 		
 		if(aUnidade.inimigoAlvo!=null){
-			Unidade inimigo = aUnidade.inimigoAlvo;
+			UnidadeBloqueada inimigo = aUnidade.inimigoAlvo;
 			
 			if(inimigo.getVivo()==false){
 				aUnidade.caminho  = null;
@@ -45,7 +46,7 @@ public class IATeste implements InterfaceIA {
 
 		
 		if(aUnidade.estado ==0 || aUnidade.caminho == null){
-			Unidade ui = unidadeMaisProxima(aUnidade,listadeAgentes);
+			UnidadeBloqueada ui = unidadeMaisProxima(aUnidade,listadeAgentes);
 			if(ui!=null){
 				//System.out.println("MeuTime "+aUnidade.getTime()+" objetivo "+ui.getTime());
 				aUnidade.objetivox = (int)ui.getX()/16;
@@ -76,12 +77,12 @@ public class IATeste implements InterfaceIA {
 		}
 	}
 	
-	Unidade unidadeMaisProxima(Unidade aUnidade, ArrayList<Unidade> listadeAgentes){
+	UnidadeBloqueada unidadeMaisProxima(Unidade aUnidade, ArrayList<UnidadeBloqueada> listadeAgentes){
 		double dist = Double.MAX_VALUE;
-		Unidade maisproxima = null;
+		UnidadeBloqueada maisproxima = null;
 		for(int i = 0; i < listadeAgentes.size();i++){
-			Unidade un = listadeAgentes.get(i);
-			if(un!=aUnidade&&un.getTime()!=aUnidade.getTime()){
+			UnidadeBloqueada un = listadeAgentes.get(i);
+			if(un.getCodigoUnico()!=aUnidade.getCodigoUnico()&&un.getTime()!=aUnidade.getTime()){
 				double dist2 = un.getDist2(aUnidade);
 				if(dist2<dist){
 					dist = dist2;
