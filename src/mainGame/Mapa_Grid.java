@@ -5,6 +5,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 import java.awt.image.WritableRaster;
+import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -52,6 +53,38 @@ public class Mapa_Grid extends Mapa{
 		}
 	}
 
+	public void loadmapfromimage(File filename){
+		BufferedImage imagem = null;
+		try {
+			BufferedImage imgtmp = ImageIO.read(filename);
+			imagem = new BufferedImage(imgtmp.getWidth(), imgtmp.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			imagem.getGraphics().drawImage(imgtmp, 0, 0,null);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Altura = imagem.getWidth();
+		Largura = imagem.getHeight();
+		
+		mapa = new int[getAltura()][getLargura()];
+		
+		WritableRaster rast = imagem.getRaster();
+		DataBuffer buf = rast.getDataBuffer();
+		
+		int cor = buf.getElem(0);
+		for(int j = 0; j < imagem.getHeight();j++){
+			for(int i = 0; i < imagem.getWidth();i++){
+				int cor1 = buf.getElem(imagem.getWidth()*j+i);
+				if(cor==cor1){
+					mapa[j][i] = 0;
+				}else{
+					mapa[j][i] = 1;
+				}
+			}
+		}
+	}	
+	
 	@Override
 	public void DesenhaSe(Graphics2D dbg) {
 		// TODO Auto-generated method stub

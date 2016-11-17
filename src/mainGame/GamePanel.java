@@ -4,11 +4,15 @@ import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import ia.IATeste;
 import ia.InterfaceIA;
 
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Random;
 import java.awt.image.*;
@@ -62,32 +66,41 @@ public GamePanel()
 	mapa = new Mapa_Grid(200,200,125, 80);
 	mapa.loadmapfromimage("/200x200.png");
 	
+	inicializaTimes();
+} // end of GamePanel()
+
+private void inicializaTimes() {
+	
+	synchronized (listadeagentes) {
+		listadeagentes.clear();
+		listadeagentesbloqueados.clear();
+	}
 	//time 1
 	for(int i = 0; i < 80; i++){
 		Color cor = new Color(255,0,0);
 		int bx = 20;
-		int by = 20+i; 
+		int by = 5+i; 
 		Unidade agentetest = new UnidadeSoldado(bx*16,by*16,1, cor,ia1);
 		listadeagentes.add(agentetest);
 	}
 	for(int i = 0; i < 80; i++){
 		Color cor = new Color(128,0,0);
 		int bx = 18;
-		int by = 20+i; 
+		int by = 5+i; 
 		Unidade agentetest = new UnidadeLanceiro(bx*16,by*16,1, cor,ia1);
 		listadeagentes.add(agentetest);
 	}
 	for(int i = 0; i < 80; i++){
 		Color cor = new Color(80,0,0);
 		int bx = 16;
-		int by = 20+i; 
+		int by = 5+i; 
 		Unidade agentetest = new UnidadeArqueiro(bx*16,by*16,1, cor,ia1);
 		listadeagentes.add(agentetest);
 	}
 	for(int i = 0; i < 80; i++){
 		Color cor = new Color(128,60,0);
 		int bx = 14;
-		int by = 20+i; 
+		int by = 5+i; 
 		Unidade agentetest = new UnidadeCavaleiro(bx*16,by*16,1, cor,ia1);
 		listadeagentes.add(agentetest);
 	}
@@ -97,34 +110,34 @@ public GamePanel()
 	for(int i = 0; i < 80; i++){
 		Color cor = new Color(0,0,255);
 		int bx = baseBloc;
-		int by = 20+i; 
+		int by = 5+i; 
 		Unidade agentetest = new UnidadeSoldado(bx*16,by*16,2, cor,ia2);
 		listadeagentes.add(agentetest);
 	}
 	for(int i = 0; i < 80; i++){
 		Color cor = new Color(0,0,128);
 		int bx = baseBloc+2;
-		int by = 20+i; 
+		int by = 5+i; 
 		Unidade agentetest = new UnidadeLanceiro(bx*16,by*16,2, cor,ia2);
 		listadeagentes.add(agentetest);
 	}
 	for(int i = 0; i < 80; i++){
 		Color cor = new Color(0,0,80);
 		int bx = baseBloc+4;
-		int by = 20+i; 
+		int by = 5+i; 
 		Unidade agentetest = new UnidadeArqueiro(bx*16,by*16,2, cor,ia2);
 		listadeagentes.add(agentetest);
 	}
 	for(int i = 0; i < 80; i++){
 		Color cor = new Color(0,60,128);
 		int bx = baseBloc+6;
-		int by = 20+i; 
+		int by = 5+i; 
 		Unidade agentetest = new UnidadeCavaleiro(bx*16,by*16,2, cor,ia2);
 		listadeagentes.add(agentetest);
 	}	
 	
 	listadeagentesbloqueados.addAll(listadeagentes);
-} // end of GamePanel()
+}
 
 private void initListners() {
 	setBackground(Color.white);
@@ -153,6 +166,65 @@ private void initListners() {
 				}
 				if(keyCode == KeyEvent.VK_DOWN){
 					DOWN = true;
+				}
+				if(keyCode == KeyEvent.VK_F1){
+					
+					synchronized (listadeagentes) {
+						listadeagentes.clear();
+						listadeagentesbloqueados.clear();
+					}
+					
+					JFileChooser fileChoosermap = new JFileChooser(new File("."));
+					fileChoosermap.setDialogTitle("MAPA");
+					fileChoosermap.setAcceptAllFileFilterUsed(false);
+			        FileNameExtensionFilter filtermap = new FileNameExtensionFilter("Imagem Mapa", "bmp","png","jpg");
+			        fileChoosermap.addChoosableFileFilter(filtermap);
+			        fileChoosermap.showOpenDialog(null);
+			        File filemap = fileChoosermap.getSelectedFile();
+			        
+					mapa.loadmapfromimage(filemap);
+					
+			        JFileChooser fileChooser = new JFileChooser(new File("."));
+			        fileChooser.setDialogTitle("IA Time 1");
+			        fileChooser.setAcceptAllFileFilterUsed(false);
+			        FileNameExtensionFilter filter = new FileNameExtensionFilter("IA Class", "class");
+			        fileChooser.addChoosableFileFilter(filter);
+			        fileChooser.showOpenDialog(null);
+			        File fia1 = fileChooser.getSelectedFile();
+			        if(fia1==null){
+			        	return;
+			        }
+			        fileChooser.setDialogTitle("IA Time 2");
+			        fileChooser.showOpenDialog(null);
+			        File fia2 = fileChooser.getSelectedFile();
+			        if(fia2==null){
+			        	return;
+			        }
+			        
+			        URL url;
+					try {
+						url = fia1.toURI().toURL();						
+				        URL urls[] = {url};
+				        ClassLoader cl = new URLClassLoader(urls);
+						InterfaceIA obj1 = (InterfaceIA) cl.loadClass("ia."+fia1.getName().substring(0,fia1.getName().length()-6)).newInstance();
+					
+						url = fia2.toURI().toURL();						
+				        urls[0] = url;
+				        cl = new URLClassLoader(urls);
+						InterfaceIA obj2 = (InterfaceIA) cl.loadClass("ia."+fia2.getName().substring(0,fia2.getName().length()-6)).newInstance();
+						
+						ia1 = obj1;
+						ia2 = obj2;
+						
+						inicializaTimes();
+					
+					} catch (MalformedURLException | InstantiationException | IllegalAccessException | ClassNotFoundException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
+			       
+			        //protected InterfaceIA ia1;
+			        //protected InterfaceIA ia2;
 				}	
 			}
 		@Override
@@ -214,21 +286,6 @@ private void initListners() {
 				int my = (arg0.getY()*2+mapa.MapY)/16;
 				
 				mapa.mapa[my][mx] = 1;
-			}
-			
-			if(arg0.getButton()==1){
-				int mx = (arg0.getX()*2+mapa.MapX)/16;
-				int my = (arg0.getY()*2+mapa.MapY)/16;
-				
-				synchronized (listadeagentes) {
-					for(int i = 0;i < listadeagentes.size();i++){
-						Unidade agente = ((Unidade)listadeagentes.get(i));
-						agente.objetivox = mx;
-						agente.objetivoy = my;
-						agente.setouobjetivo = true;
-					}
-				}
-
 			}
 		}
 		
@@ -314,10 +371,12 @@ private void gameUpdate(long DiffTime)
 	
 	listaUnidadesTemp.clear();
 	
-	for(int i = 0; i < listadeagentes.size();i++){
-		Unidade un = listadeagentes.get(i);
-		if(un.getTime()==1){
-			listaUnidadesTemp.add(un);
+	synchronized (listadeagentes) {
+		for(int i = 0; i < listadeagentes.size();i++){
+			Unidade un = listadeagentes.get(i);
+			if(un.getTime()==1){
+				listaUnidadesTemp.add(un);
+			}
 		}
 	}
 	
@@ -325,10 +384,12 @@ private void gameUpdate(long DiffTime)
 	
 	listaUnidadesTemp.clear();
 	
-	for(int i = 0; i < listadeagentes.size();i++){
-		Unidade un = listadeagentes.get(i);
-		if(un.getTime()==1){
-			listaUnidadesTemp.add(un);
+	synchronized (listadeagentes) {
+		for(int i = 0; i < listadeagentes.size();i++){
+			Unidade un = listadeagentes.get(i);
+			if(un.getTime()==1){
+				listaUnidadesTemp.add(un);
+			}
 		}
 	}
 	
@@ -351,15 +412,16 @@ private void gameUpdate(long DiffTime)
 	
 
 	
-	
-	for(int i = 0;i < listadeagentes.size();i++){
-		Agente agg = listadeagentes.get(i);
-		if(agg.vivo==false){
-			  listadeagentes.remove(i);
-			  listadeagentesbloqueados.remove(i);
-			  i--;
-		}else{
-			agg.SimulaSe((int)DiffTime);
+	synchronized (listadeagentes) {
+		for(int i = 0;i < listadeagentes.size();i++){
+			Agente agg = listadeagentes.get(i);
+			if(agg.vivo==false){
+				  listadeagentes.remove(i);
+				  listadeagentesbloqueados.remove(i);
+				  i--;
+			}else{
+				agg.SimulaSe((int)DiffTime);
+			}
 		}
 	}
 }

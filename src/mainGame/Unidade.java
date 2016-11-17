@@ -100,8 +100,7 @@ public class Unidade extends Agente implements UnidadeBloqueada{
 									for (int z = 0; z < ((retorno.length / 2) - j) * 2; z++) {
 										caminho[i * 2 + z] = retorno[j * 2 + z];
 									}
-									System.out.println(" caminho "
-											+ caminho.length);
+									//System.out.println(" caminho "+ caminho.length);
 									aestrela.achoufinal = true;
 									estado = 0;
 									return;
