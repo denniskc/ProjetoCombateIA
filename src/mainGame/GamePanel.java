@@ -435,7 +435,7 @@ private void gameRender(Graphics2D dbg)
 	
 	AffineTransform trans = dbg.getTransform();
 	
-	dbg.scale(0.5, 0.5);
+	//dbg.scale(0.5, 0.5);
 	
 	mapa.DesenhaSe(dbg);
 	
@@ -445,7 +445,6 @@ private void gameRender(Graphics2D dbg)
 		}
 	}
 	
-
     Stroke stk = dbg.getStroke();
     dbg.setStroke(new BasicStroke(2));
     

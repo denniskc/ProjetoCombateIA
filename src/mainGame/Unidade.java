@@ -219,6 +219,10 @@ public class Unidade extends Agente implements UnidadeBloqueada{
 	public double getX(){return X;}
 	public double getY(){return Y;}
 	
+	public int getTimerAnim(){return timeranim;}
+	public double getXAlvoAnim(){return xalvoanim;}
+	public double getYAlvoAnim(){return yalvoanim;}
+	
 	public float getDist2(UnidadeBloqueada un){
 		double dx = X-un.getX();
 		double dy = Y-un.getY();
