@@ -8,10 +8,10 @@ import ia.InterfaceIA;
 
 public class Unidade extends Agente implements UnidadeBloqueada{
 	
-	public int TIPO_SOLDADO = 1;
-	public int TIPO_LANCEIRO = 2;
-	public int TIPO_ARQUEIRO = 3;
-	public int TIPO_CAVALEIRO = 4;
+	public static final int TIPO_SOLDADO = 1;
+	public static final int TIPO_LANCEIRO = 2;
+	public static final int TIPO_ARQUEIRO = 3;
+	public static final int TIPO_CAVALEIRO = 4;
 
 	protected Color color;
 	protected double oldx = 0;
@@ -77,7 +77,7 @@ public class Unidade extends Agente implements UnidadeBloqueada{
 
 		if (aestrela.iniciouAestrela) {
 			if (aestrela.achoufinal == false) {
-				int[] retorno = aestrela.continuapath(5);
+				int[] retorno = aestrela.continuapath(20);
 				if (retorno != null) {
 					AEstrela atmp = new AEstrela(GamePanel.mapa);
 					int[] caminho2 = atmp.StartAestrela((int) (X / 16),
@@ -165,7 +165,7 @@ public class Unidade extends Agente implements UnidadeBloqueada{
 
 				double dista = dax * dax + day * day;
 
-				if (dista < 100) {
+				if (dista < 25) {
 					X = oldx;
 					Y = oldy;
 
@@ -199,7 +199,7 @@ public class Unidade extends Agente implements UnidadeBloqueada{
 
 	public void setaObjetivo(int objetivox, int objetivoy) {
 		long tempoinicio = System.currentTimeMillis();
-		caminho = aestrela.StartAestrela((int) (X / 16), (int) (Y / 16),objetivox, objetivoy, 30);
+		caminho = aestrela.StartAestrela((int) (X / 16), (int) (Y / 16),objetivox, objetivoy, 300);
 		GamePanel.tempo = (int) (System.currentTimeMillis() - tempoinicio);
 		GamePanel.nodosabertos = aestrela.nodosAbertos.size()+ aestrela.nodosFechados.size();
 		estado = 0;
@@ -246,7 +246,7 @@ public class Unidade extends Agente implements UnidadeBloqueada{
 	}
 	
 	public void ataca(UnidadeBloqueada un){
-		if(timerAtaque>250){
+		if(timerAtaque>500){
 			float dist = getDist2(un);
 			if(dist < raioAtaque*raioAtaque){
 				timerAtaque = 0;

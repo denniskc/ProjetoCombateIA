@@ -6,6 +6,7 @@ import java.awt.geom.AffineTransform;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import ia.IADennis;
 import ia.IATeste;
 import ia.InterfaceIA;
 
@@ -53,12 +54,17 @@ protected InterfaceIA ia2;
 
 ArrayList<Unidade> listaUnidadesTemp = new ArrayList<>(1000);
 
+int nunidade = 50;
+
+int lastdragx = 0;
+int lastdragy = 0;
+
 public GamePanel()
 {
 
 	initListners();	
 	
-	ia1 = new IATeste();
+	ia1 = new IADennis();
 	ia2 = new IATeste();
 	
 	mousex = mousey = 0;
@@ -76,28 +82,28 @@ private void inicializaTimes() {
 		listadeagentesbloqueados.clear();
 	}
 	//time 1
-	for(int i = 0; i < 80; i++){
+	for(int i = 0; i < nunidade; i++){
 		Color cor = new Color(255,0,0);
 		int bx = 20;
 		int by = 5+i; 
 		Unidade agentetest = new UnidadeSoldado(bx*16,by*16,1, cor,ia1);
 		listadeagentes.add(agentetest);
 	}
-	for(int i = 0; i < 80; i++){
+	for(int i = 0; i < nunidade; i++){
 		Color cor = new Color(128,0,0);
 		int bx = 18;
 		int by = 5+i; 
 		Unidade agentetest = new UnidadeLanceiro(bx*16,by*16,1, cor,ia1);
 		listadeagentes.add(agentetest);
 	}
-	for(int i = 0; i < 80; i++){
+	for(int i = 0; i < nunidade; i++){
 		Color cor = new Color(80,0,0);
 		int bx = 16;
 		int by = 5+i; 
 		Unidade agentetest = new UnidadeArqueiro(bx*16,by*16,1, cor,ia1);
 		listadeagentes.add(agentetest);
 	}
-	for(int i = 0; i < 80; i++){
+	for(int i = 0; i < nunidade; i++){
 		Color cor = new Color(128,60,0);
 		int bx = 14;
 		int by = 5+i; 
@@ -107,28 +113,28 @@ private void inicializaTimes() {
 	
 	int baseBloc = 120;
 	//time 2
-	for(int i = 0; i < 80; i++){
+	for(int i = 0; i < nunidade; i++){
 		Color cor = new Color(0,0,255);
 		int bx = baseBloc;
 		int by = 5+i; 
 		Unidade agentetest = new UnidadeSoldado(bx*16,by*16,2, cor,ia2);
 		listadeagentes.add(agentetest);
 	}
-	for(int i = 0; i < 80; i++){
+	for(int i = 0; i < nunidade; i++){
 		Color cor = new Color(0,0,128);
 		int bx = baseBloc+2;
 		int by = 5+i; 
 		Unidade agentetest = new UnidadeLanceiro(bx*16,by*16,2, cor,ia2);
 		listadeagentes.add(agentetest);
 	}
-	for(int i = 0; i < 80; i++){
+	for(int i = 0; i < nunidade; i++){
 		Color cor = new Color(0,0,80);
 		int bx = baseBloc+4;
 		int by = 5+i; 
 		Unidade agentetest = new UnidadeArqueiro(bx*16,by*16,2, cor,ia2);
 		listadeagentes.add(agentetest);
 	}
-	for(int i = 0; i < 80; i++){
+	for(int i = 0; i < nunidade; i++){
 		Color cor = new Color(0,60,128);
 		int bx = baseBloc+6;
 		int by = 5+i; 
@@ -264,6 +270,17 @@ private void initListners() {
 				
 				mapa.mapa[my][mx] = 1;
 			}
+			
+			int dx = e.getX()-lastdragx;
+			int dy = e.getY()-lastdragy;
+			
+			//System.out.println(" "+dx+" "+dy+" "+mapa.MapX+" "+mapa.MapY);
+			//mapa.Posiciona(mapa.MapX+dx, mapa.MapY+dy);
+			posx-=dx;
+			posy-=dy;
+			
+			lastdragx = e.getX();
+			lastdragy = e.getY();
 		}
 	});
 	
@@ -287,6 +304,9 @@ private void initListners() {
 				
 				mapa.mapa[my][mx] = 1;
 			}
+			
+			lastdragx = arg0.getX();
+			lastdragy = arg0.getY();
 		}
 		
 		@Override

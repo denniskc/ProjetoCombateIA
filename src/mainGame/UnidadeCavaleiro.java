@@ -13,7 +13,7 @@ public class UnidadeCavaleiro extends Unidade{
 	public UnidadeCavaleiro(int x, int y, int oTime, Color color, InterfaceIA ia) {
 		super(x, y, oTime, color, ia);
 		tipo = TIPO_CAVALEIRO;
-		life = 200;
+		life = 300;
 		dano = 15;
 		vel  = 120;
 		raioAtaque = 32;
@@ -43,7 +43,7 @@ public class UnidadeCavaleiro extends Unidade{
 		
 		if(getTimerAnim()<100){
 			dbg.setColor(Color.MAGENTA);
-			dbg.drawLine((int)X- XMundo, (int)Y- YMundo, (int)getXAlvoAnim()- XMundo, (int)getXAlvoAnim()- YMundo);
+			dbg.drawLine((int)X- XMundo, (int)Y- YMundo, (int)getXAlvoAnim()- XMundo, (int)getYAlvoAnim()- YMundo);
 		}
 
 	}

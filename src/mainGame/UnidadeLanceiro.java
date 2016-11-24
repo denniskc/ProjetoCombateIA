@@ -43,7 +43,7 @@ public class UnidadeLanceiro extends Unidade {
 		
 		if(getTimerAnim()<100){
 			dbg.setColor(Color.MAGENTA);
-			dbg.drawLine((int)X- XMundo, (int)Y- YMundo, (int)getXAlvoAnim()- XMundo, (int)getXAlvoAnim()- YMundo);
+			dbg.drawLine((int)X- XMundo, (int)Y- YMundo, (int)getXAlvoAnim()- XMundo, (int)getYAlvoAnim()- YMundo);
 		}
 
 	}
